@@ -2,10 +2,11 @@
 library(shiny)
 library(tidyverse)
 library(ggplot2)
+library(haven)
 
 data <- readRDS("data.RDS")
 
-# Functions ####
+# Functions ##### 
 
 # Function for handling pickerInput with NA
 is_val <- function(value, set) {
@@ -38,27 +39,27 @@ shinyServer(function(input, output) {
   # Main sample
   data_main <- reactive({
     data %>%
-      filter(prov_geo %in% input$province_select_a) %>%
-      filter(mn_type %in% input$municipality_select_a) %>%
-      filter(quintile %in% input$quintile_select_a) %>%
-      filter(is_val(input$clean_toilets_a, toilet_clean)) %>%
-      filter(is_val(input$electricity_a, electricity_working)) %>%
-      filter(is_val(input$meal_a, meals)) %>%
-      filter(is_val(input$indoor_space_a, space)) %>%
-      filter(is_val(input$books_a, books))
+      dplyr::filter(prov_geo %in% input$province_select_a) %>%
+      dplyr::filter(mn_type %in% input$municipality_select_a) %>%
+      dplyr::filter(quintile %in% input$quintile_select_a) %>%
+      dplyr::filter(is_val(input$clean_toilets_a, toilet_clean)) %>%
+      dplyr::filter(is_val(input$electricity_a, electricity_working)) %>%
+      dplyr::filter(is_val(input$meal_a, meals)) %>%
+      dplyr::filter(is_val(input$indoor_space_a, space)) %>%
+      dplyr::filter(is_val(input$books_a, books))
   })
 
   # Comparison sample
   data_comparison <- reactive({
     data %>%
-      filter(prov_geo %in% input$province_select_b) %>%
-      filter(mn_type %in% input$municipality_select_b) %>%
-      filter(quintile %in% input$quintile_select_b) %>%
-      filter(is_val(input$clean_toilets_b, toilet_clean)) %>%
-      filter(is_val(input$electricity_b, electricity_working)) %>%
-      filter(is_val(input$meal_b, meals)) %>%
-      filter(is_val(input$indoor_space_b, space))  %>%
-      filter(is_val(input$books_b, books))
+      dplyr::filter(prov_geo %in% input$province_select_b) %>%
+      dplyr::filter(mn_type %in% input$municipality_select_b) %>%
+      dplyr::filter(quintile %in% input$quintile_select_b) %>%
+      dplyr::filter(is_val(input$clean_toilets_b, toilet_clean)) %>%
+      dplyr::filter(is_val(input$electricity_b, electricity_working)) %>%
+      dplyr::filter(is_val(input$meal_b, meals)) %>%
+      dplyr::filter(is_val(input$indoor_space_b, space))  %>%
+      dplyr::filter(is_val(input$books_b, books))
   })
 
   # Main sample proportion
@@ -150,6 +151,14 @@ shinyServer(function(input, output) {
     comp_bar_plots()[6] 
   })
 
-  output$test_table <- renderDataTable(datatable(comparison_data()))
+  
+  main_n <- reactive(comparison_data()[1, "n"])
+  comparison_n <- reactive(comparison_data()[2, "n"])
+  
+  output$sample_n <- renderText({
+    paste("     Main sample:", main_n(), "; Comparison sample:", comparison_n())
+  })
+  
+#  output$test_table <- renderDataTable(datatable(comparison_data()))
 
 })

@@ -134,7 +134,7 @@ ui <- dashboardPage(
     ),
     fluidRow(
       column(12,
-             box(title = "Output", width = 12,
+             box(title = "Output", width = 12, 
                  fluidRow(
                    column(4, plotOutput("bar_comp_total")), # First bar graph
                    column(4, plotOutput("bar_comp_gmd")),   # Second bar graph
@@ -144,10 +144,12 @@ ui <- dashboardPage(
                    column(4, plotOutput("bar_comp_enm")),   # Fourth bar graph
                    column(4, plotOutput("bar_comp_cef")),        # Fifth bar graph
                    column(4, plotOutput("bar_comp_ell"))    # Sixth bar graph
-                 )
+                 ),
+                 fluidRow(column(6, textOutput("sample_n"))) 
              )
       )
     ),
-    fluidRow(DT::dataTableOutput("test_table"),style = "height:500px; overflow-y: scroll;overflow-x: scroll;")
+#,
+    #fluidRow(DT::dataTableOutput("test_table"),style = "height:500px; overflow-y: scroll;overflow-x: scroll;")
   )
 )
